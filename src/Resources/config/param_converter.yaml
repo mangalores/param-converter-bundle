@@ -1,0 +1,79 @@
+services:
+  json_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RequestParamConverter
+    autowire: false
+    arguments:
+      - '@json_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -100, converter: deserialize_param_converter }
+
+  fetch_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RequestParamConverter
+    autowire: false
+    arguments:
+      - '@get_entity_handler'
+    tags:
+      - { name: request.param_converter,  priority: -100, converter: fetch_param_converter }
+
+  get_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    autowire: false
+    arguments:
+      - 'GET'
+      - '@get_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -1, converter: get_param_converter }
+
+  delete_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    autowire: false
+    arguments:
+      - 'DELETE'
+      - '@get_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -1, converter: delete_param_converter }
+
+  post_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    autowire: false
+    arguments:
+      - 'POST'
+      - '@post_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -3, converter: post_param_converter }
+
+  put_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    autowire: false
+    arguments:
+      - 'PUT'
+      - '@put_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -4, converter: put_param_converter }
+
+  patch_param_converter:
+    public: true
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    autowire: false
+    arguments:
+      - 'PATCH'
+      - '@patch_entity_handler'
+    tags:
+      - { name: request.param_converter, priority: -5, converter: patch_param_converter }
+
+  get_entity_handler:
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\ChainedHandler\DelegateHandler
+    arguments:
+      - '@sensio_framework_extra.converter.doctrine.orm'
+
+  json_entity_handler:
+    class: Limango\ApiUtilsBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler
+    arguments:
+      - '@jms_serializer'
+      - '@validator'
