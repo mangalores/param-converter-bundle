@@ -12,11 +12,11 @@
     "require": {
         "php": "^7.2 || ^7.4",
         "ext-json": "*",
-        "symfony/framework-bundle": "^4.4.0 || ^5.1.0",
-        "symfony/validator": "^4.4.0 || ^5.1.0",
-        "symfony/yaml": "^4.4.0 || ^5.1.0",
+        "symfony/framework-bundle": ">4.2 || ^5.1.0",
+        "symfony/validator": ">4.2 || ^5.1.0",
+        "symfony/yaml": ">4.2 || ^5.1.0",
         "jms/serializer-bundle": ">=2.0",
-        "sensio/framework-extra-bundle": "^5.5",
+        "sensio/framework-extra-bundle": ">5.0",
         "symfony/orm-pack": ">1.0"
     },
     "require-dev": {
