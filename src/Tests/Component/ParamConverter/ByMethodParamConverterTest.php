@@ -2,8 +2,8 @@
 
 namespace Lores\RestParamConverterBundle\Tests\Component\ParamConverter;
 
+use Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter;
 use Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\ChainedHandlerInterface;
-use Lores\RestParamConverterBundle\Component\ParamConverter\MethodParamConverter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -11,14 +11,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @covers \Lores\RestParamConverterBundle\Component\ParamConverter\MethodParamConverter
+ * @covers \Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
  */
-final class MethodParamConverterTest extends MockeryTestCase
+final class ByMethodParamConverterTest extends MockeryTestCase
 {
     private const METHOD = 'Foo';
 
     /**
-     * @var MethodParamConverter
+     * @var ByMethodParamConverter
      */
     private $converter;
 
@@ -42,7 +42,7 @@ final class MethodParamConverterTest extends MockeryTestCase
         $this->request = Mockery::mock(Request::class);
         $this->configuration = Mockery::mock(ParamConverter::class);
         $this->handler = Mockery::mock(ChainedHandlerInterface::class);
-        $this->converter = new MethodParamConverter(self::METHOD, $this->handler);
+        $this->converter = new ByMethodParamConverter(self::METHOD, $this->handler);
 
         parent::setUp();
     }

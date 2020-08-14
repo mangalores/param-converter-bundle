@@ -3,19 +3,19 @@
 namespace Lores\RestParamConverterBundle\Tests\Component\ParamConverter;
 
 use Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\ChainedHandlerInterface;
-use Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandlerParamConverter;
+use Lores\RestParamConverterBundle\Component\ParamConverter\ChainedParamConverter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @covers \Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandlerParamConverter
+ * @covers \Lores\RestParamConverterBundle\Component\ParamConverter\ChainedParamConverter
  */
 final class ChainedHandlerParamConverterTest extends MockeryTestCase
 {
     /**
-     * @var ChainedHandlerParamConverter
+     * @var ChainedParamConverter
      */
     private $converter;
 
@@ -39,7 +39,7 @@ final class ChainedHandlerParamConverterTest extends MockeryTestCase
         $this->request = Mockery::mock(Request::class);
         $this->configuration = Mockery::mock(ParamConverter::class);
         $this->handler = Mockery::mock(ChainedHandlerInterface::class);
-        $this->converter = new ChainedHandlerParamConverter($this->handler);
+        $this->converter = new ChainedParamConverter($this->handler);
 
         parent::setUp();
     }

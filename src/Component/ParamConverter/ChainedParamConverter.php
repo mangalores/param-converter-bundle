@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ChainedHandlerParamConverter implements ParamConverterInterface
+class ChainedParamConverter implements ParamConverterInterface
 {
     /**
      * @var ChainedHandlerInterface

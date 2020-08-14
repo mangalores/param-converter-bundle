@@ -1,0 +1,25 @@
+services:
+  patch_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DelegateHandler
+    arguments:
+      - '@sensio_framework_extra.converter.doctrine.orm'
+    calls:
+      - [setNext, ['@patch_handler.merge_handler']]
+
+  patch_handler.merge_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\MergeHandler
+    arguments:
+      - '@patch_handler.deserialization_handler'
+    calls:
+      - [setNext, ['@patch_handler.validator_handler']]
+
+  patch_handler.deserialization_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler
+    arguments:
+      - '@jms_serializer'
+      - '@context_factory'
+
+  patch_handler.validator_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\ValidatorHandler
+    arguments:
+      - '@validator'

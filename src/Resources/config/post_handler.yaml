@@ -1,0 +1,14 @@
+services:
+
+  post_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler
+    arguments:
+      - '@jms_serializer'
+      - '@context_factory'
+    calls:
+      - [setNext, ['@post_handler.validator_handler']]
+
+  post_handler.validator_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\ValidatorHandler
+    arguments:
+      - '@validator'

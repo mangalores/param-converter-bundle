@@ -1,79 +1,76 @@
+import:
+  - {handler.yaml}
+
 services:
-  json_param_converter:
+  deserialize_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedParamConverter
     autowire: false
     arguments:
-      - '@json_entity_handler'
+      - '@post_handler'
     tags:
       - { name: request.param_converter, priority: -100, converter: deserialize_param_converter }
 
   fetch_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedParamConverter
     autowire: false
     arguments:
-      - '@get_entity_handler'
+      - '@get_handler'
     tags:
       - { name: request.param_converter,  priority: -100, converter: fetch_param_converter }
 
   get_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
     autowire: false
     arguments:
       - 'GET'
-      - '@get_entity_handler'
+      - '@get_handler'
     tags:
       - { name: request.param_converter, priority: -1, converter: get_param_converter }
 
   delete_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
     autowire: false
     arguments:
       - 'DELETE'
-      - '@get_entity_handler'
+      - '@get_handler'
     tags:
-      - { name: request.param_converter, priority: -1, converter: delete_param_converter }
+      - { name: request.param_converter, priority: -2, converter: delete_param_converter }
 
   post_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
     autowire: false
     arguments:
       - 'POST'
-      - '@post_entity_handler'
+      - '@post_handler'
     tags:
       - { name: request.param_converter, priority: -3, converter: post_param_converter }
 
   put_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
     autowire: false
     arguments:
       - 'PUT'
-      - '@put_entity_handler'
+      - '@put_handler'
     tags:
       - { name: request.param_converter, priority: -4, converter: put_param_converter }
 
   patch_param_converter:
     public: true
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\RestRequestParamConverter
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ByMethodParamConverter
     autowire: false
     arguments:
       - 'PATCH'
-      - '@patch_entity_handler'
+      - '@patch_handler'
     tags:
       - { name: request.param_converter, priority: -5, converter: patch_param_converter }
 
-  get_entity_handler:
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\ChainedHandler\DelegateHandler
+  context_factory:
+    class: Lores\RestParamConverterBundle\Component\JMS\SkipDoctrineContextFactory
     arguments:
-      - '@sensio_framework_extra.converter.doctrine.orm'
-
-  json_entity_handler:
-    class: Limango\ApiUtilsBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler
-    arguments:
-      - '@jms_serializer'
-      - '@validator'
+      - '@doctrine.orm.default_entity_manager'

@@ -6,7 +6,7 @@ use Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\Chain
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
-final class MethodParamConverter extends ChainedHandlerParamConverter
+final class ByMethodParamConverter extends ChainedParamConverter
 {
     /**
      * @var string

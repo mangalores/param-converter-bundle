@@ -1,0 +1,6 @@
+services:
+
+  get_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DelegateHandler
+    arguments:
+      - '@sensio_framework_extra.converter.doctrine.orm'

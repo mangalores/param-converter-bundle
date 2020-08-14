@@ -5,7 +5,7 @@ namespace Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class ChainedHandler implements ChainedHandlerInterface
+class ChainedHandler implements ChainedHandlerInterface
 {
     /**
      * @var ChainedHandlerInterface|null

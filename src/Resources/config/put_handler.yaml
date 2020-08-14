@@ -1,0 +1,26 @@
+services:
+
+  put_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler
+    arguments:
+      - '@jms_serializer'
+      - '@context_factory'
+    calls:
+      - [setNext, ['@put_handler.validator_handler']]
+
+  put_handler.validator_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\ValidatorHandler
+    arguments:
+      - '@validator'
+    calls:
+      - [setNext, ['@put_handler.merge_handler']]
+
+  put_handler.merge_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\MergeHandler
+    arguments:
+      - '@put_handler.orm_entity_handler'
+
+  put_handler.orm_entity_handler:
+    class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DelegateHandler
+    arguments:
+      - '@sensio_framework_extra.converter.doctrine.orm'
