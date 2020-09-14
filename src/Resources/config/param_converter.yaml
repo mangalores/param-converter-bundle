@@ -1,5 +1,8 @@
-import:
-  - {handler.yaml}
+imports:
+  - { resource: get_handler.yaml }
+  - { resource: put_handler.yaml }
+  - { resource: post_handler.yaml }
+  - { resource: patch_handler.yaml }
 
 services:
   deserialize_param_converter:

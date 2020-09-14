@@ -70,6 +70,11 @@ final class SkipDoctrineReferenceStrategyTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $this->manager
+            ->shouldReceive('initializeObject')
+            ->with($object)
+            ->once();
+
         static::assertTrue(
             $this->strategy->shouldSkipProperty(
                 $this->mockPropertyMetaData(),

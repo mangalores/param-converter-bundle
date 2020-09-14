@@ -31,7 +31,14 @@ final class SkipDoctrineReferenceStrategy implements ExclusionStrategyInterface
 
         // implemented by both xml and json, but not declared in interfaces
         if (\method_exists($visitor, 'getCurrentObject')) {
-            return $this->manager->contains($visitor->getCurrentObject());
+            $object = $visitor->getCurrentObject();
+
+            // if proxy need to check its validity inside Serializer context
+            if ($this->manager->contains($object)) {
+                $this->manager->initializeObject($object);
+
+                return true;
+            }
         }
 
         return false;

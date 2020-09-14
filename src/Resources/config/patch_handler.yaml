@@ -12,6 +12,7 @@ services:
       - '@patch_handler.deserialization_handler'
     calls:
       - [setNext, ['@patch_handler.validator_handler']]
+      - [setPartial, [true]]
 
   patch_handler.deserialization_handler:
     class: Lores\RestParamConverterBundle\Component\ParamConverter\ChainedHandler\DeserializeHandler

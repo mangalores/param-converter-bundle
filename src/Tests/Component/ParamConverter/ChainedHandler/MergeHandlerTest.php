@@ -147,7 +147,7 @@ final class MergeHandlerTest extends MockeryTestCase
     public function testInvalidObjects($currentObject, $newObject): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('on merge both objects (a and b) must be of expected class instance');
+        $this->expectExceptionMessage('on merge both objects (a and b) must be instances of class TestObject');
 
         $this->configuration
             ->shouldReceive('getName')
@@ -226,14 +226,14 @@ final class MergeHandlerTest extends MockeryTestCase
             ->andReturn(self::ATTRIBUTE);
     }
 
-    private function setUpParamBag($currentObject, $newObject): void
+    private function setUpParamBag($objectA, $objectB): void
     {
         $this->request->attributes = Mockery::mock(ParameterBag::class);
         $this->request->attributes
             ->shouldReceive('get')
             ->with(self::ATTRIBUTE)
             ->twice()
-            ->andReturn($currentObject, $newObject);
+            ->andReturn($objectA, $objectB);
 
         $this->request->attributes
             ->shouldReceive('remove')
@@ -242,16 +242,21 @@ final class MergeHandlerTest extends MockeryTestCase
 
         $this->request->attributes
             ->shouldReceive('set')
-            ->with(self::ATTRIBUTE, $newObject)
+            ->with(self::ATTRIBUTE, $objectA)
+            ->once();
+
+        $this->request->attributes
+            ->shouldReceive('set')
+            ->with(self::ATTRIBUTE, $objectB)
             ->once();
 
         $this->delegatedHandler
             ->shouldReceive('handle')
             ->with($this->request, $this->configuration)
             ->andReturnUsing(
-                static function (Request $request, ParamConverter $configuration) use ($newObject) {
+                static function (Request $request, ParamConverter $configuration) use ($objectB) {
                     $request
-                        ->attributes->set(self::ATTRIBUTE, $newObject);
+                        ->attributes->set(self::ATTRIBUTE, $objectB);
 
                     return true;
                 }

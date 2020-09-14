@@ -32,39 +32,55 @@ final class MergeHandler extends ChainedHandler
 
     public function handle(Request $request, ParamConverter $configuration): bool
     {
-        $class = $configuration->getClass();
+        $reflection = $this->makeReflection($configuration->getClass());
 
-        try {
-            $reflection = new ReflectionClass($class);
-        } catch (ReflectionException $e) {
+        if (!$reflection instanceof ReflectionClass) {
             return false;
         }
 
         $name = $configuration->getName();
-        $current = $request->attributes->get($name);
+        $objectA = $request->attributes->get($name);
         $request->attributes->remove($name);
         $this->handler->handle($request, $configuration);
-        $new = $request->attributes->get($name);
+        $objectB = $request->attributes->get($name);
+        $request->attributes->set($name, $objectA);
 
-        if (!(\is_a($current, $class) && \is_a($new, $class))) {
-            throw new LogicException('on merge both objects (a and b) must be of expected class instance');
-        }
 
-        $this->merge($reflection, $current, $new);
+        $this->merge($reflection, $objectA, $objectB);
 
         return parent::handle($request, $configuration);
     }
 
-    private function merge(ReflectionClass $reflection, object $current, object $new): void
+    private function makeReflection(string $class): ?ReflectionClass
     {
+        try {
+            return new ReflectionClass($class);
+        } catch (ReflectionException $e) {
+            return null;
+        }
+    }
+
+    private function merge(ReflectionClass $reflection, $objectA, $objectB): void
+    {
+        if (
+            !(\is_object($objectA) && $reflection->isInstance($objectA))
+            ||
+            !(\is_object($objectB) &&$reflection->isInstance($objectB))) {
+
+            throw new LogicException(
+                \sprintf('on merge both objects (a and b) must be instances of class %s', $reflection->getShortName())
+            );
+        }
+
         foreach ($reflection->getProperties() as $property) {
             $property->setAccessible(true);
 
-            if ($this->partial && null === $property->getValue($new)) {
+            if ($this->partial && null === $property->getValue($objectB)) {
                 continue;
             }
 
-            $property->setValue($current, $property->getValue($new));
+            $property->setValue($objectA, $property->getValue($objectB));
         }
     }
+
 }
